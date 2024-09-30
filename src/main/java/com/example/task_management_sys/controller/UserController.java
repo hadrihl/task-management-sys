@@ -3,6 +3,7 @@ package com.example.task_management_sys.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ import com.example.task_management_sys.entity.User;
 import com.example.task_management_sys.service.UserService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/users")
 public class UserController {
 
@@ -25,8 +27,14 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        
+        if(users != null && !users.isEmpty()) {
+            return ResponseEntity.ok(users);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @GetMapping("/{id}")
@@ -45,14 +53,23 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User userDetails) {
-        return userService.updateUser(id, userDetails);
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
+        User savedUser = userService.updateUser(id, userDetails);
+        if(savedUser != null) {
+            return ResponseEntity.ok(savedUser);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
+        boolean status = userService.deleteUser(id);
+        if(status) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
     }
 
 }

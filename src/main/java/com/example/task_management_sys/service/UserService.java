@@ -40,10 +40,13 @@ public class UserService {
 		return null;
 	}
 	
-	public void deleteUser(Long id) {
+	public boolean deleteUser(Long id) {
 		User user = userRepository.findById(id).get();
 		if (user != null) {
 			userRepository.delete(user);
+			return true;
+		} else {
+			return false;
 		}
 	}
 }

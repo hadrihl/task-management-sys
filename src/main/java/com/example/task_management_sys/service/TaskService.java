@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.task_management_sys.entity.Task;
 import com.example.task_management_sys.repository.TaskRepository;
-import com.example.task_management_sys.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 
